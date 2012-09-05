@@ -55,13 +55,11 @@
  *      special chars
  */
 
-var global = this;
-
 (function () {
 
     "use strict";
 
-    global.Validator = function (config) {
+    this.Validator = function (config) {
 		/// <summary>Create a new Validator object.</summary>
 		/// <param name="config" type="Object">Validator configuration.</param>
 		/// <returns type="Object">Validator object.</returns>
@@ -254,7 +252,7 @@ var global = this;
 
                         return new Validator.Result(field, false, test);
                     } else if (result && test == "creditcard") {
-					
+					   // TODO: CC test is successful, return the type of CC here
 					}
                 }
 
@@ -548,11 +546,11 @@ var global = this;
         this.el = (config.$el && !config.el) ? config.$el[0] : config.el;
         this.$el = (config.el && !config.$el) ? $(config.el) : config.$el;
         this.$els = (this.$el.length > 1 ? this.$el : null);
-        this.label = (config.$label && !config.label) ? config.$label[0] : config.label;
-        this.$label = (config.label && !config.$label) ? $(config.label) : config.$label;
         this.tests = config.tests !== undefined ? config.tests.split(", ") : "";
         this.pretest = config.pretest;
         this.blurCount = 0;
+        this.label = (config.$label && !config.label) ? config.$label[0] : config.label;
+        this.$label = (config.label && !config.$label) ? $(config.label) : config.$label;
 
         if (!this.$label) { this.$label = this.$el.closest(".control-group").find("label").eq(0); }
 
@@ -653,5 +651,4 @@ var global = this;
 
         return form;
     };
-
-})();
+}).call(this);
