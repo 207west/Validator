@@ -6,7 +6,7 @@
  * 12:34 MicroTechnologies
  * http://12:34micro.com
  *
- * Date: Mon June 29 2012
+ * Date: Wed September 9th 2012
  *
  * Requirements: 
  *					jquery.js, underscore.js, underscore.string.js, bootstrap.js
