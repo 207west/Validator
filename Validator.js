@@ -6,7 +6,7 @@
  * 207 West
  * http://207west.com
  *
- * Date: Fri Decembter 14th 2012
+ * Date: Fri December 14th 2012
  *
  * Requirements: 
  *					jquery.js, underscore.js, underscore.string.js, bootstrap.js
