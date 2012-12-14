@@ -2,11 +2,11 @@
  * Validator.js
  * Front-end validation engine.
  *
- * Copyright 2012, Adam Drago
- * 12:34 MicroTechnologies
- * http://12:34micro.com
+ * Copyright 2012, Adam Drago, Dan Dombrowski
+ * 207 West
+ * http://207west.com
  *
- * Date: Wed September 5th 2012
+ * Date: Fri Decembter 14th 2012
  *
  * Requirements: 
  *					jquery.js, underscore.js, underscore.string.js, bootstrap.js
@@ -24,7 +24,8 @@
  *			{ name: "Phone", $el: $("#txtPhone"), tests: "required, phone-us", pretest: function () { return $("#chkPhone").prop("checked"); } },
  *			{ name: "EventType", $el: $("#ddlEventType") },
  *			{ name: "NumberOfAttendees", $el: $("#ddlNumberOfAttendees") },
- *			{ name: "EventDate", $el: $("#txtEventDate"), tests: "required" },
+ *			{ name: "EventStartDate", $el: $("#txtEventStartDate"), tests: "required" },
+ *          { name: "EventEndDate", $el: $("#txtEventEndDate"), tests: "required", customTest: { name: "dates-equal", test: function () { return $("#txtEventStartDate").val() != $("#txtEventEndDate").val(); } } },
  *			{ name: "AdditionalInformation", $el: $("#txtAdditionalInformation") }
  *		],
  *      buttons: [
@@ -46,7 +47,8 @@
  *			"number": "This field must be a number.",
  *			"email": "This field must be an email address.",
  *			"phone-us": "This field must be a valid phone number.",
- *			"length:5": "This field must be 5 characters long."
+ *			"length:5": "This field must be 5 characters long.",
+ *          "dates-equal": "Start and end dates cannot be the same."
  *		}
  *	});
  *
@@ -254,6 +256,34 @@
                     } else if (result && test == "creditcard") {
 					   // TODO: CC test is successful, return the type of CC here
 					}
+                }
+
+                if(field.customTest !== undefined) {
+                    var result = field.customTest.test();
+                    if(!result) {
+                        if (this.showErrors) {
+                            $controlGroup.addClass("error");
+                            if (this.errorLabel && $controlGroup.find(".error-label").length == 0) {
+                                field.$label.append(this.errorLabelHtml);
+                            }
+                        }
+
+                        if (this.showMessages && this.messages) {
+                            var $errorLabel = $controlGroup.find(".error-label");
+                            
+                            if (!$errorLabel.data("tooltip")) {
+                                $errorLabel.tooltip({
+                                    placement: "right",
+                                    trigger: "manual",
+                                    title: this.messages[field.customTest.name]
+                                });
+                            } else {
+                                $errorLabel.data("tooltip").options.title = this.messages[field.customTest.name];
+                            }
+                        }
+
+                        return new Validator.Result(field, false, field.customTest.name);
+                    }
                 }
 
                 if (this.showErrors) {
@@ -548,6 +578,7 @@
         this.$els = (this.$el.length > 1 ? this.$el : null);
         this.tests = config.tests !== undefined ? config.tests.split(", ") : "";
         this.pretest = config.pretest;
+        this.customTest = config.customTest;
         this.blurCount = 0;
         this.label = (config.$label && !config.label) ? config.$label[0] : config.label;
         this.$label = (config.label && !config.$label) ? $(config.label) : config.$label;
